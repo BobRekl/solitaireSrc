@@ -668,6 +668,17 @@ public class Solitaire extends JFrame {
      */
     public class ButtonPanel extends JPanel{
         ButtonPanel(){
+            int widthNewGame;
+            int widthRestart;
+            int widthSave;
+            int widthUnDo;
+            int widthRecycle;
+            int widthAutoPlay;
+            int widthStats;
+            int widthGap;
+            int widthButtons;
+            int widthButtonPanel;
+            
             WindowData windowData = new WindowData();
             //System.out.println("buttonPanel");
             this.setBorder(windowData.BORDER);
@@ -678,33 +689,46 @@ public class Solitaire extends JFrame {
             JButton newGameButton = new JButton("New Game");
             NewGameButtonListener newGameButtonListener = new NewGameButtonListener();
             newGameButton.addActionListener(newGameButtonListener);
+            widthNewGame = newGameButton.getPreferredSize().width;
 
             JButton restartButton = new JButton("Restart Game");
             RestartButtonListener restartButtonListener = new RestartButtonListener();
             restartButton.addActionListener(restartButtonListener);
+            widthRestart = restartButton.getPreferredSize().width;
 
             JButton saveButton = new JButton("Save & Quit");
             SaveButtonListener saveButtonListener = new SaveButtonListener();
             saveButton.addActionListener(saveButtonListener);
+            widthSave = saveButton.getPreferredSize().width;
 
             JButton unDoButton = new JButton("Un Do");
             UnDoButtonListener unDoButtonListener = new UnDoButtonListener();
             unDoButton.addActionListener(unDoButtonListener);
+            widthUnDo = unDoButton.getPreferredSize().width;
 
             JButton recycleDeckButton = new JButton("Recycle Deck");
             RecycleDeckButtonListener recycleDeckButtonListener = new RecycleDeckButtonListener();
             recycleDeckButton.addActionListener(recycleDeckButtonListener);
+            widthRecycle = recycleDeckButton.getPreferredSize().width;
 
             JButton autoPlayButton = new JButton("Auto Play");
             AutoPlayButtonListener autoPlayButtonListener = new AutoPlayButtonListener();
             autoPlayButton.addActionListener(autoPlayButtonListener);
+            widthAutoPlay = autoPlayButton.getPreferredSize().width;
 
             JButton displayStatsButton = new JButton("Display Statistics");
             DisplayStatsButtonListener displayStatsButtonListener = new DisplayStatsButtonListener();
             displayStatsButton.addActionListener(displayStatsButtonListener);
+            widthStats = displayStatsButton.getPreferredSize().width;
             
+            widthButtons = widthNewGame + widthRestart + widthSave + widthUnDo + 
+                    widthRecycle + widthAutoPlay + widthStats;
+            widthGap = 6;
+            widthButtonPanel = windowData.X_BOARD_SIZE - getInsets().left - getInsets().right;
+            System.out.println("containerGap = "+(widthButtonPanel - widthButtons)/2+", inset = "+getInsets().left+", gap = "+widthGap);
             layout.setHorizontalGroup(layout.createSequentialGroup()
-                    .addContainerGap(100, 100)
+                    .addContainerGap((widthButtonPanel - widthButtons - 6*widthGap)/2, 
+                            (widthButtonPanel - widthButtons - 6*widthGap)/2)
                     .addComponent(newGameButton)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(restartButton)
