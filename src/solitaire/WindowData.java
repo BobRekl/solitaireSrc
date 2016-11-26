@@ -32,6 +32,9 @@ public class WindowData {
     public final int STATISTICS_HEIGHT; //statistics display size
     public final int STATISTICS_WIDTH;
     public final int STATISTICS_INC; //increment between lines in statistics display
+    
+    public final int VICTORY_WIDTH;  //victory display size
+    public final int VICTORY_HEIGHT;  //victory display size
             
     WindowData(){
         X_BOARD_SIZE = 930;
@@ -43,6 +46,7 @@ public class WindowData {
         X_CARD = 85; //Size of most card images / 4 
         Y_CARD = 132;
         BORDER = BorderFactory.createLineBorder(Color.BLUE, 2); //standard border style
+        
         OFFSET_INC = 20;
         GAP = 5;
         CONTAINER_GAP = 10;
@@ -53,5 +57,8 @@ public class WindowData {
         STATISTICS_HEIGHT = 130;
         STATISTICS_WIDTH = 200;
         STATISTICS_INC = 20;
+        
+        VICTORY_WIDTH = 200;
+        VICTORY_HEIGHT = 100;
     }
 }
