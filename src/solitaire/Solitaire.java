@@ -357,6 +357,7 @@ public class Solitaire extends JFrame {
                                 //System.out.println("Case 3");
                                 placeFound = player.autoMove(cardRectangle.stackNum, cardRectangle.cardNum);
                                 if(placeFound) {
+                                    repaint();
                                     break;
                                 }
                             default://normal operation
@@ -396,11 +397,11 @@ public class Solitaire extends JFrame {
             int gpWidth;
             gpWidth = this.getWidth();
             
-            final int stackWidth; //Display parameters
-            final int upperRectangleHeight;
-            final int lowerRectangleHeight;
-            final int lowerRectanglePosY;
-            final int upperRectanglePosY;
+            final int STACK_WIDTH; //Display parameters
+            final int UPPER_RECTANGLE_HEIGHT;
+            final int LOWER_RECTANGLE_HEIGHT;
+            final int LOWER_RECTANGLE_POS_Y;
+            final int UPPER_RECTANGLE_POS_Y;
             
             int stackRectPosX;
             int stackRectPosY;
@@ -438,23 +439,23 @@ public class Solitaire extends JFrame {
             gameScore.paint(gg);
             
             
-            stackWidth = ((10*(gpWidth - 6*windowData.GAP - 2*windowData.CONTAINER_GAP))/7 + 5)/10; //integer rounding corrected
-            upperRectanglePosY = windowData.CONTAINER_GAP + 30;
-            upperRectangleHeight = windowData.Y_CARD + 10;
+            STACK_WIDTH = ((10*(gpWidth - 6*windowData.GAP - 2*windowData.CONTAINER_GAP))/7 + 5)/10; //integer rounding corrected
+            UPPER_RECTANGLE_POS_Y = windowData.CONTAINER_GAP + 30;
+            UPPER_RECTANGLE_HEIGHT = windowData.Y_CARD + 10;
             
-            lowerRectanglePosY = upperRectanglePosY + upperRectangleHeight + 18;
-            lowerRectangleHeight = gpHeight - (windowData.CONTAINER_GAP + 30) - upperRectangleHeight -18 -windowData.CONTAINER_GAP;
+            LOWER_RECTANGLE_POS_Y = UPPER_RECTANGLE_POS_Y + UPPER_RECTANGLE_HEIGHT + 18;
+            LOWER_RECTANGLE_HEIGHT = gpHeight - (windowData.CONTAINER_GAP + 30) - UPPER_RECTANGLE_HEIGHT -18 -windowData.CONTAINER_GAP;
             
             cardRectangle_s.clear(); //clear stack of card rectangles used by listener to determine which card was hit
             for(stackNum = 1; stackNum <= 14; stackNum++){ //Set up display parameters for stacks
                 if(stackNum <= 7){ //lower stack panel
-                        stackRectPosX = windowData.CONTAINER_GAP + (stackNum-1)*(stackWidth + windowData.GAP);
-                        stackRectPosY = lowerRectanglePosY;
-                        rectangleHeight = lowerRectangleHeight;
+                        stackRectPosX = windowData.CONTAINER_GAP + (stackNum-1)*(STACK_WIDTH + windowData.GAP);
+                        stackRectPosY = LOWER_RECTANGLE_POS_Y;
+                        rectangleHeight = LOWER_RECTANGLE_HEIGHT;
                 } else { //upper stack panel
-                        stackRectPosX = windowData.CONTAINER_GAP + (stackNum-8)*(stackWidth + windowData.GAP);
-                        stackRectPosY = upperRectanglePosY;
-                        rectangleHeight = upperRectangleHeight;
+                        stackRectPosX = windowData.CONTAINER_GAP + (stackNum-8)*(STACK_WIDTH + windowData.GAP);
+                        stackRectPosY = UPPER_RECTANGLE_POS_Y;
+                        rectangleHeight = UPPER_RECTANGLE_HEIGHT;
                 }
                 
                 switch (stackNum){
@@ -485,7 +486,7 @@ public class Solitaire extends JFrame {
                 }
                 
                 //Create and draw stack rectangle
-                rectangle = new Rectangle(stackRectPosX, stackRectPosY, stackWidth, rectangleHeight);
+                rectangle = new Rectangle(stackRectPosX, stackRectPosY, STACK_WIDTH, rectangleHeight);
                 g2.setColor(Color.GREEN);
                 if(stackNum == 10) g2.setColor(Color.YELLOW);
                 g2.fill(rectangle);
@@ -508,7 +509,7 @@ public class Solitaire extends JFrame {
                 g2.drawString(numHidden, numHiddenPosX, numHiddenPosY);
                 
                 //Create and draw empty card rectangle
-                cardPosX = stackRectPosX + (stackWidth - windowData.X_CARD)/2;
+                cardPosX = stackRectPosX + (STACK_WIDTH - windowData.X_CARD)/2;
                 cardPosY = stackRectPosY + 5;
                 rectangle = new Rectangle(cardPosX, cardPosY, windowData.X_CARD, windowData.Y_CARD);
                 g2.setColor(new Color(0, 127, 63));
@@ -539,11 +540,12 @@ public class Solitaire extends JFrame {
                 }
             }
             
-            size.setSize(200, 100); //draw victory display
+            size.setSize(windowData.VICTORY_WIDTH, windowData.VICTORY_HEIGHT); //draw victory display
             victory.setPreferredSize(size);
             victory.setBounds(60 + insets.left, 1 + insets.top,size.width, size.height);
-            gg = g.create(gpWidth/2 - 100 + insets.left, 70 + insets.top, size.width, size.height);
+            gg = g.create(gpWidth/2 - windowData.VICTORY_WIDTH/2 + insets.left, windowData.VICTORY_HEIGHT/2 + insets.top, size.width, size.height);
             if(player.isVictory()) victory.paint(gg);
+            //victory.paint(gg);
             
             statisticsOffset = 5;
             if(showStatistics){//Create and draw statistics rectangle

@@ -396,7 +396,7 @@ public class SolitairePlayer {
         
         found = false;
         if(cardNum == Stacks.getStackTop(stackNum)){
-            top_suite = -1;
+            //top_suite = -1;
             top_stack = 10;
             while((top_stack < 14)&&!found){
                 top_stack++;
@@ -440,19 +440,23 @@ public class SolitairePlayer {
         int bottom_stack;
         final int[] bottom_stacks = {1, 2, 3, 4, 5, 6, 7, 9}; //will check these stacks for posible cards to move
         int top_top_stack;
+        int best_top_stack;
         int top_bottom_stack;
         int top_rank;
         int top_suite;
         int bottom_rank;
         int bottom_suite;
+        int move_to;
         SolitaireMove solitaireMove;
         
         n = 1;
         found = false;
         setAnnouncement("");
         while((n <= 2*8*4)&&!found){ //2 cases to check, 8 candidate stacks to move from, 4 candidate stacks to move to
-            top_stack = (n - 1)%4 + 11; //decode n to determine candidate stack to move to
-            bottom_stack = bottom_stacks[((n - 1)/4)%8]; //decode n to determine candidate stack to move from
+            bottom_stack = bottom_stacks[(n - 1)%8]; //decode n to determine candidate stack to move from
+            top_stack = ((n - 1)/8)%4 + 11; //decode n to determine candidate stack to move to
+            //top_stack = (n - 1)%4 + 11; //decode n to determine candidate stack to move to
+            //bottom_stack = bottom_stacks[((n - 1)/4)%8]; //decode n to determine candidate stack to move from
             nCase = ((n - 1)/(4*8))%2 + 1; //decode n to determne the case number
             
             n++;
@@ -464,13 +468,18 @@ public class SolitairePlayer {
             top_bottom_stack = Stacks.getStackTop(bottom_stack);//get rank and suite for target card to move up
             bottom_rank = Stacks.Deck.getRank(top_bottom_stack);
             bottom_suite = Stacks.Deck.getSuite(top_bottom_stack);
+            best_top_stack = bottom_suite + 11;
             
             if(nCase == 1){ //case 1 search posibility of moving ace up to an empty spot
                 if((top_top_stack == 0)&&(bottom_rank == 1)){ //ace can move to empty slot
+                    move_to = top_top_stack;
+                    if(Stacks.isEmpty(best_top_stack)){
+                        move_to = best_top_stack;
+                    }
                     found = true;
                     solitaireMove = new SolitaireMove(bottom_stack, 10, top_bottom_stack, 0); //set up move and add to the move stack
                     solitaireMoves.add(solitaireMove);
-                    solitaireMove = new SolitaireMove(10, top_stack, top_bottom_stack, 10);
+                    solitaireMove = new SolitaireMove(10, move_to, top_bottom_stack, 10);
                     solitaireMoves.add(solitaireMove);
 
                     executeMoves();
