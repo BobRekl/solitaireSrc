@@ -422,6 +422,7 @@ public class SolitairePlayer {
                 solitaireMoves.add(solitaireMove);
 
                 executeMoves();
+                setAnnouncement("");
             }
         }
         
