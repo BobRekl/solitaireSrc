@@ -48,6 +48,7 @@ public class Solitaire extends JFrame {
     SolitaireFrameListener solitaireFrameListener;
     javax.swing.Timer autoPlayTimer;
     
+    
     /**
      * Solitaire Constructor - Creates main JPanel. 
      */
@@ -60,6 +61,7 @@ public class Solitaire extends JFrame {
         autoPlayTimerListener = new AutoPlayTimerListener(); //listener for timer used to animate auto play
         autoPlayTimer = new javax.swing.Timer(300, autoPlayTimerListener);
         autoPlayTimer.stop(); //turn off timer until auto play button pushed
+
         
         solitaireFrameListener = new SolitaireFrameListener(); //listener to save statistics on window close
         this.addWindowListener(solitaireFrameListener);
@@ -102,7 +104,6 @@ public class Solitaire extends JFrame {
             this.add(gamePanel, BorderLayout.CENTER);
             this.add(buttonPanel, BorderLayout.PAGE_END);
         }
-                
     }
     
     /**
@@ -122,7 +123,6 @@ public class Solitaire extends JFrame {
         double standardDeviation;
         BufferedImage backImg; //image of back of a card
         ArrayList<CardRectangle> cardRectangle_s; //Stack of card rectangles enables mouse click response
-        
         
         /**
          * GamePanel - Constructor sets up main game panel displays with card stacks painted in paintComponent override.
@@ -213,8 +213,9 @@ public class Solitaire extends JFrame {
             public void keyPressed(KeyEvent e){
                 boolean ctrlDn;
                 ctrlDn = e.isControlDown();
-                
+                //System.out.println("ctrlzlistener1");
                 if((e.getKeyCode()==java.awt.event.KeyEvent.VK_Z)&&ctrlDn){
+                    //System.out.println("ctrlzlistener2");
                     showStatistics = false;
                     player.unDo();
                     repaint();
@@ -278,7 +279,7 @@ public class Solitaire extends JFrame {
             e1 = player.toDisplay && mousePressed_in; //first half of move - respond to mouse pressed
             e2 = !player.toDisplay && !mousePressed_in; //second half of move - respond to mouse released
 
-            requestFocusInWindow();
+            //requestFocusInWindow();
             
             showStatistics = false;
             repaint();
@@ -422,6 +423,8 @@ public class Solitaire extends JFrame {
             CardRectangle cardRectangle;
             String numHidden;
             int countNotVis;
+            
+            requestFocusInWindow();
             
             //update announcement
             announcement.setText(player.announcement);
@@ -679,6 +682,7 @@ public class Solitaire extends JFrame {
             int widthButtons;
             int widthButtonPanel;
             
+            
             WindowData windowData = new WindowData();
             //System.out.println("buttonPanel");
             this.setBorder(windowData.BORDER);
@@ -715,7 +719,7 @@ public class Solitaire extends JFrame {
             AutoPlayButtonListener autoPlayButtonListener = new AutoPlayButtonListener();
             autoPlayButton.addActionListener(autoPlayButtonListener);
             widthAutoPlay = autoPlayButton.getPreferredSize().width;
-
+            
             JButton displayStatsButton = new JButton("Display Statistics");
             DisplayStatsButtonListener displayStatsButtonListener = new DisplayStatsButtonListener();
             displayStatsButton.addActionListener(displayStatsButtonListener);
@@ -725,7 +729,7 @@ public class Solitaire extends JFrame {
                     widthRecycle + widthAutoPlay + widthStats;
             widthGap = 6;
             widthButtonPanel = windowData.X_BOARD_SIZE - getInsets().left - getInsets().right;
-            System.out.println("containerGap = "+(widthButtonPanel - widthButtons)/2+", inset = "+getInsets().left+", gap = "+widthGap);
+            //System.out.println("containerGap = "+(widthButtonPanel - widthButtons)/2+", inset = "+getInsets().left+", gap = "+widthGap);
             layout.setHorizontalGroup(layout.createSequentialGroup()
                     .addContainerGap((widthButtonPanel - widthButtons - 6*widthGap)/2, 
                             (widthButtonPanel - widthButtons - 6*widthGap)/2)
@@ -851,7 +855,26 @@ public class Solitaire extends JFrame {
             repaint();
         }
     }
-
+    
+    /**
+     * AutoPlayTimerListener - Causes action when auto play timer fires.
+     */
+    private class AutoPlayTimerListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            boolean found;
+            
+            found = player.autoPlay();
+            if(found){
+                repaint();
+            } else {
+                autoPlayTimer.stop();
+                player.setAnnouncement("");
+                repaint();
+                protect_flag = false;
+            }
+        }
+    }
 
     /**
      * DisplayStatsButtonListener - Causes action when display statistics button pressed.
@@ -885,27 +908,6 @@ public class Solitaire extends JFrame {
         public void windowActivated(WindowEvent e) {}
         @Override
         public void windowDeactivated(WindowEvent e) {}
-    }
-    
-    
-    /**
-     * AutoPlayTimerListener - Causes action when auto play timer fires.
-     */
-    private class AutoPlayTimerListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            boolean found;
-            
-            found = player.autoPlay();
-            if(found){
-                repaint();
-            } else {
-                autoPlayTimer.stop();
-                player.setAnnouncement("");
-                repaint();
-                protect_flag = false;
-            }
-        }
     }
     
     /**

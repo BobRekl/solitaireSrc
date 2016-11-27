@@ -451,7 +451,7 @@ public class SolitairePlayer {
         
         n = 1;
         found = false;
-        setAnnouncement("");
+        //setAnnouncement("");
         while((n <= 2*8*4)&&!found){ //2 cases to check, 8 candidate stacks to move from, 4 candidate stacks to move to
             bottom_stack = bottom_stacks[(n - 1)%8]; //decode n to determine candidate stack to move from
             top_stack = ((n - 1)/8)%4 + 11; //decode n to determine candidate stack to move to
