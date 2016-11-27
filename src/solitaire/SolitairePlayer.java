@@ -280,6 +280,7 @@ public class SolitairePlayer {
     public void recycleDeck(){
         int stackSize;
         int n;
+        int score;
         int cardNum;
         SolitaireMove solitaireMove;
         
@@ -292,7 +293,11 @@ public class SolitairePlayer {
                 solitaireMoves.add(solitaireMove);
 
                 if((n == 1)||(n == stackSize)) { //first and last moves score -50.  This marks the range of moves that recycle the deck.
-                    solitaireMove = new SolitaireMove(10, 8, cardNum, -50);
+                    score = -50;
+                    if(stackSize == 1){
+                        score = -100;
+                    }
+                    solitaireMove = new SolitaireMove(10, 8, cardNum, score);
                 } else {
                     solitaireMove = new SolitaireMove(10, 8, cardNum, 0);//move from display stack to new card stack
                 }
