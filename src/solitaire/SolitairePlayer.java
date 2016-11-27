@@ -469,11 +469,11 @@ public class SolitairePlayer {
             top_top_stack = Stacks.getStackTop(top_stack);//get rank and suite of target card to move onto
             top_rank = Stacks.Deck.getRank(top_top_stack);
             top_suite = Stacks.Deck.getSuite(top_top_stack);
-            best_top_stack = top_suite + 11;
 
             top_bottom_stack = Stacks.getStackTop(bottom_stack);//get rank and suite for target card to move up
             bottom_rank = Stacks.Deck.getRank(top_bottom_stack);
             bottom_suite = Stacks.Deck.getSuite(top_bottom_stack);
+            best_top_stack = bottom_suite + 11;
             
             if(nCase == 1){ //case 1 search posibility of moving ace up to an empty spot
                 if((top_top_stack == 0)&&(bottom_rank == 1)){ //ace can move to empty slot
@@ -481,6 +481,7 @@ public class SolitairePlayer {
                     if(Stacks.isEmpty(best_top_stack)){
                         move_to = best_top_stack;
                     }
+                    System.out.println("top_stack = "+top_stack+", best_top_stack = "+best_top_stack+", move_to = "+move_to);
                     found = true;
                     solitaireMove = new SolitaireMove(bottom_stack, 10, top_bottom_stack, 0); //set up move and add to the move stack
                     solitaireMoves.add(solitaireMove);

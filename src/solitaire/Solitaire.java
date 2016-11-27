@@ -682,7 +682,6 @@ public class Solitaire extends JFrame {
             int widthButtons;
             int widthButtonPanel;
             
-            
             WindowData windowData = new WindowData();
             //System.out.println("buttonPanel");
             this.setBorder(windowData.BORDER);
