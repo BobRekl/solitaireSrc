@@ -90,22 +90,6 @@ public class SolitaireDeck {
     }
     
     /**
-     * Gets a card image from an array of card images.
-     * @param cardNum - Number of the card for which an image is returned.
-     * @return Return the selected image.
-     */
-    public BufferedImage getImage(int cardNum){
-        BufferedImage img; 
-        img = null;
-        if((cardNum >= 1) && (cardNum <= 54)){
-            img = CARD_IMAGES[cardNum - 1];
-        } else {
-            System.out.println("getImage- No such image "+cardNum);
-        }
-        return img;
-    }
-    
-    /**
      * Shuffle the card deck arrays assigning a next card to each card in the 
      * deck.
      */
@@ -123,7 +107,20 @@ public class SolitaireDeck {
         ArrayList<NCard> NCardList = new ArrayList<>(); //ArrayList of NCards containing card data that can be sorted
 
         start_card = (int)(52.*Math.random()*0.999999999999999) + 1; // random number between 1 and 52
-        
+        /*
+        *  This is the implementation of Math.random()
+        *public static synchronized double random()
+        *{
+        *       if (rand == null)
+        *          rand = new Random();
+        *       return rand.nextDouble(); 
+        *}
+        *
+        *  The Random() constructor for class Random "sets the seed of the 
+        *  random number generator to a value very likely to be distinct from 
+        *  any other invocation of this constructor".
+        *
+        */
 
         for (n = 1; n <= 52; n++) { //52 random numbers placed into Ncards to shuffle the deck
                 NCardList.add(new NCard(n, (int)(10000000.*Math.random()), 0));
@@ -189,6 +186,22 @@ public class SolitaireDeck {
             }
             CARD_IMAGES[n-1] = img;
         }
+    }
+    
+    /**
+     * Gets a card image from an array of card images.
+     * @param cardNum - Number of the card for which an image is returned.
+     * @return Return the selected image.
+     */
+    public BufferedImage getImage(int cardNum){
+        BufferedImage img; 
+        img = null;
+        if((cardNum >= 1) && (cardNum <= 54)){
+            img = CARD_IMAGES[cardNum - 1];
+        } else {
+            System.out.println("getImage- No such image "+cardNum);
+        }
+        return img;
     }
     
     /**

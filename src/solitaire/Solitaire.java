@@ -794,10 +794,7 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             boolean writeSuccess;
-            //SolitaireGameArchive solitaireGameArchive;
-
-            //solitaireGameArchive = new SolitaireGameArchive();
-            //writeGameFile(solitaireGameArchive);
+            
             writeSuccess = writeGameFile();
             repaint();
             if(writeSuccess){
@@ -827,7 +824,7 @@ public class Solitaire extends JFrame {
         public void actionPerformed(ActionEvent event) {
             //System.out.println("RecycleDeckListener 8 is empty-"+Moves.Stacks.isEmpty(8)+", toDisplay-"+Moves.toDisplay);
             showStatistics = false;
-            if((player.Stacks.isEmpty(8))&&(player.toDisplay)){
+            if((player.Stacks.isEmpty(8))&&(player.toDisplay)){ //If new card pile is empty and it is the first half of a move then recycle the deck
                 player.recycleDeck();
                 repaint();
             }
@@ -842,11 +839,11 @@ public class Solitaire extends JFrame {
         public void actionPerformed(ActionEvent event) {
             //System.out.println("AutoPlayButtonListener toDisplay = " + Moves.toDisplay);
             showStatistics = false;
-            if(player.toDisplay){
+            if(player.toDisplay){ //if first half of the move cycle
                 player.setAnnouncement("Working");
                 //repaint();
                 protect_flag = true;
-                autoPlayTimer.start();
+                autoPlayTimer.start(); //start the timer.  autoPlayTimerListener will search for moves one at a time as the timer fires 
             } else {
                 player.setAnnouncement("Must complet move to run AutoPlay");
                 //repaint();
@@ -863,10 +860,10 @@ public class Solitaire extends JFrame {
         public void actionPerformed(ActionEvent event) {
             boolean found;
             
-            found = player.autoPlay();
+            found = player.autoPlay(); //search for one move each time the timer fires
             if(found){
                 repaint();
-            } else {
+            } else { //when no valid moves are found turn off the timer and quit
                 autoPlayTimer.stop();
                 player.setAnnouncement("");
                 repaint();
@@ -1125,26 +1122,11 @@ public class Solitaire extends JFrame {
         result = false;
         if(player.toDisplay){
             fillSolitaireMovesLocal();
-//        try {
-//            //nmx = Moves.solitaireMoves2.size();
-//            nmx = solitaireMovesLocal.size();
-//            //nmx = solitaireMovesAr.size();
-//            for(n = 1; n <= nmx; n++){
-//                System.out.println("writeGameFile card = "+Moves.solitaireMoves2.get(n-1)[0]+
-//                        ", score = "+Moves.solitaireMoves2.get(n-1)[1]+
-//                        ", stack from = "+Moves.solitaireMoves2.get(n-1)[2]+
-//                        ", stack to = "+Moves.solitaireMoves2.get(n-1)[3]);
-//            }
-//            System.out.println("writeGameFile nmx = "+nmx);
-//        }
-//        catch(NullPointerException e){}
 
             File file = new File("SolitaireGameArchive.sga");
 
             try {
                 out = new ObjectOutputStream(new FileOutputStream(file));
-                //out.writeObject(outputArchive);
-                //out.writeObject(solitaireGameArchive);
                 out.writeObject(player.Stacks.Deck.NextCards);
                 out.writeObject(player.Stacks.Deck.NextCardsArchive);
                 out.writeObject(player.Stacks.Deck.CardsVis);

@@ -10,9 +10,6 @@ import java.util.ArrayList;
  * @author Bob Reklis
  */
 public class SolitairePlayer {
-    //int stack_hit = 0; //The stack hit by a mouse click
-    //int card_hit = 0; //The card hit by a mouse click.
-    //public int card;
     public boolean toDisplay = true; //Toggle between the 2 halves of a move.  True when card moves to stack 10.
     public String announcement; //A message displayed at the top of the game panel
     public int last_card; //The card from the first half of the move
@@ -29,16 +26,8 @@ public class SolitairePlayer {
      */
     SolitairePlayer(){
         solitaireMoves = new ArrayList<>(); //stack of all the moves made in the game
-        int n;
-//        int numMoves;
-//        int nMoves;
-//        int[] intMove  = new int[4];
         
         Stacks = new SolitaireStacks(); //Create new solitaire stacks
-        
-//        for(n = 1; n <= 14; n++){
-//            prevCardVis[n - 1] = false;
-//        }
     }
                     
     /**
@@ -81,7 +70,7 @@ public class SolitairePlayer {
             } else {
                 popMovesStack(); //remove first half of the move
                 setAnnouncement("Invalid Move");
-                if(last_stack == stack_t){
+                if(last_stack == stack_t){ //If move is back to the original stack don't announce it as "Invalid Move"
                     setAnnouncement("");
                 }
             }
@@ -294,7 +283,7 @@ public class SolitairePlayer {
 
                 if((n == 1)||(n == stackSize)) { //first and last moves score -50.  This marks the range of moves that recycle the deck.
                     score = -50;
-                    if(stackSize == 1){
+                    if(stackSize == 1){ //If there is only one card on the discard pile subtract 100 points.  UnDo will treat it as a normal move.
                         score = -100;
                     }
                     solitaireMove = new SolitaireMove(10, 8, cardNum, score);
@@ -400,10 +389,10 @@ public class SolitairePlayer {
         //System.out.println("card_rank = "+card_rank+", card_suite = "+card_suite);
         
         found = false;
-        if(cardNum == Stacks.getStackTop(stackNum)){
+        if(cardNum == Stacks.getStackTop(stackNum)){ //search upper stacks for place to put card
             //top_suite = -1;
             top_stack = 10;
-            while((top_stack < 14)&&!found){
+            while((top_stack < 14)&&!found){ //search stacks 11 through 14
                 top_stack++;
 
                 top_top_stack = Stacks.getStackTop(top_stack);
@@ -416,7 +405,7 @@ public class SolitairePlayer {
             }
 
             if(found){
-                best_top_stack = card_suite + 11;
+                best_top_stack = card_suite + 11; //adjust stack to the preferred stack. Preferred order is spades, hearts, clubs, diamonds
                 if((Stacks.isEmpty(best_top_stack)) && (card_rank == 1)){
                     top_stack = best_top_stack;
                 }
@@ -477,11 +466,11 @@ public class SolitairePlayer {
             
             if(nCase == 1){ //case 1 search posibility of moving ace up to an empty spot
                 if((top_top_stack == 0)&&(bottom_rank == 1)){ //ace can move to empty slot
-                    move_to = top_stack;
+                    move_to = top_stack; //Move to preferred upper stack if posible. Upper stack order is spades, hearts, clubs, diamonds.
                     if(Stacks.isEmpty(best_top_stack)){
                         move_to = best_top_stack;
                     }
-                    System.out.println("top_stack = "+top_stack+", best_top_stack = "+best_top_stack+", move_to = "+move_to);
+                    //System.out.println("top_stack = "+top_stack+", best_top_stack = "+best_top_stack+", move_to = "+move_to);
                     found = true;
                     solitaireMove = new SolitaireMove(bottom_stack, 10, top_bottom_stack, 0); //set up move and add to the move stack
                     solitaireMoves.add(solitaireMove);
