@@ -8,7 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 /**
- * Display parameters used in laying out game objects.
+ * WindowData - Display parameters used in laying out game objects.
  * @author Bob Reklis
  */
 public class WindowData {
@@ -20,6 +20,7 @@ public class WindowData {
     public final int Y_BOARD_SIZE;
     public final int X_CARD; //Nominal number of pixels in a card image
     public final int Y_CARD;
+    public final int AUTO_PLAY_TIMER_TIC;
     public final Border BORDER;
     
     public final int OFFSET_INC; //amount visible cards are offset in a stack
@@ -45,6 +46,7 @@ public class WindowData {
         Y_WINDOW_LOC = 30; 
         X_CARD = 85; //Size of most card images / 4 
         Y_CARD = 132;
+        AUTO_PLAY_TIMER_TIC = 300;
         BORDER = BorderFactory.createLineBorder(Color.BLUE, 2); //standard border style
         
         OFFSET_INC = 20;

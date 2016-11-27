@@ -16,7 +16,7 @@ import java.util.Collections;
 import javax.imageio.ImageIO;
 
 /**
- * Solitaire Deck shuffles and sets up the deck of cards for the game.
+ * Solitaire Deck - Shuffles and sets up the deck of cards for the game.
  * @author Bob Reklis
  */
 public class SolitaireDeck {

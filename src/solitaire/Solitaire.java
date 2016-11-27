@@ -25,18 +25,17 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 /**
- *Solitaire - The Solitaire game JFrame.
+ *Solitaire - The Solitaire game JFrame, contains the Game Panel and Button Panel.
  * @author Bob Reklis
  * @version 11.23.2016
  */
 public class Solitaire extends JFrame {
-
     int HighScore; // Data for statistics display
     int NumberOfVictories;
     int NumberOfGamesPlayed;
     String LastPlayedDate;
     
-    SolitairePanel solitairePanel; //Main solitaire game JPanel
+    //SolitairePanel solitairePanel; //Main solitaire game JPanel
     public SolitairePlayer player; //Moves the cards for the game
     boolean protect_flag; //Turns off mouse click responses
     boolean showStatistics; //Flag causes statistics display to be painted
@@ -44,29 +43,32 @@ public class Solitaire extends JFrame {
     boolean fileExists; //saved game file exists
     
     ArrayList<int[]> solitaireMovesLocal; //A local version of the solitaire moves stack as and ArrayList of int[]
-    AutoPlayTimerListener autoPlayTimerListener;
-    SolitaireFrameListener solitaireFrameListener;
+    AutoPlayTimerListener autoPlayTimerListener; //Timer used to animate auto play function
     javax.swing.Timer autoPlayTimer;
+    SolitaireFrameListener solitaireFrameListener; //Used to monitor window closure to trigger writing the statistics file
     
+    public GamePanel gamePanel; //Panel displays card stacks
+    public ButtonPanel buttonPanel; //Panel displays buttons that control game functions
     
     /**
      * Solitaire Constructor - Creates main JPanel. 
      */
     Solitaire(){
-        solitairePanel = new SolitairePanel(); //container for game panel and button panel
+        WindowData windowData = new WindowData(); //gets display parameters
+        //solitairePanel = new SolitairePanel(); //container for game panel and button panel
         
         fileExists = readGameFile(); //read stored game data if it exists
         if(fileExists) fillSolitaireMoves(); //generate move stack from stored data
         
+        player = new SolitairePlayer(); //moves the cards, sets up the stacks, sets up the deck
+            
         autoPlayTimerListener = new AutoPlayTimerListener(); //listener for timer used to animate auto play
-        autoPlayTimer = new javax.swing.Timer(300, autoPlayTimerListener);
+        autoPlayTimer = new javax.swing.Timer(windowData.AUTO_PLAY_TIMER_TIC, autoPlayTimerListener);
         autoPlayTimer.stop(); //turn off timer until auto play button pushed
-
         
         solitaireFrameListener = new SolitaireFrameListener(); //listener to save statistics on window close
         this.addWindowListener(solitaireFrameListener);
         
-        WindowData windowData = new WindowData(); //gets display parameters
         this.setSize(windowData.X_WINDOW_SIZE, windowData.Y_WINDOW_SIZE); //set up window
         this.setTitle("Solitaire"); //title for main window
         this.setLocation(windowData.X_WINDOW_LOC, windowData.Y_WINDOW_LOC);
@@ -74,37 +76,47 @@ public class Solitaire extends JFrame {
         this.setIconImage(player.Stacks.Deck.getImage(54));
         this.setVisible(true);
         
-        this.add(solitairePanel);
+        //this.add(solitairePanel);
+        writeStatistics_flag = true; //update statistics file at end of game
+
+        this.setLayout(new BorderLayout());
+        //this.setBorder(windowData.BORDER);
+        this.setBackground(Color.GREEN);
+
+        gamePanel = new GamePanel();//Displays the game
+        buttonPanel = new ButtonPanel();//Displays buttons at the bottom
+        this.add(gamePanel, BorderLayout.CENTER);
+        this.add(buttonPanel, BorderLayout.PAGE_END);
     }
     
-    /**
-     * SolitairePanel - The main JPanel contains the Game Panel and Button Panel.
-     */
-    class SolitairePanel extends JPanel{
-        public GamePanel gamePanel;
-        public ButtonPanel buttonPanel;
-        
-        /**
-         * SolitairePanel - Creates player mechanism to move cards then adds 
-         * game and button panels to JFrame for display and control.
-         */
-        SolitairePanel() {
-            WindowData windowData = new WindowData(); //package of display parameters
-            
-            player = new SolitairePlayer(); //moves the cards
-            
-            writeStatistics_flag = true; //update statistics file at end of game
-            
-            this.setLayout(new BorderLayout());
-            this.setBorder(windowData.BORDER);
-            this.setBackground(Color.GREEN);
-            
-            gamePanel = new GamePanel();//Displays the game
-            buttonPanel = new ButtonPanel();//Displays buttons at the bottom
-            this.add(gamePanel, BorderLayout.CENTER);
-            this.add(buttonPanel, BorderLayout.PAGE_END);
-        }
-    }
+//    /**
+//     * SolitairePanel - The main JPanel contains the Game Panel and Button Panel.
+//     */
+//    class SolitairePanel extends JPanel{
+//        public GamePanel gamePanel;
+//        public ButtonPanel buttonPanel;
+//        
+//        /**
+//         * SolitairePanel - Creates player mechanism to move cards then adds 
+//         * game and button panels to JFrame for display and control.
+//         */
+//        SolitairePanel() {
+//            WindowData windowData = new WindowData(); //package of display parameters
+//            
+//            player = new SolitairePlayer(); //moves the cards
+//            
+//            writeStatistics_flag = true; //update statistics file at end of game
+//            
+//            this.setLayout(new BorderLayout());
+//            this.setBorder(windowData.BORDER);
+//            this.setBackground(Color.GREEN);
+//            
+//            gamePanel = new GamePanel();//Displays the game
+//            buttonPanel = new ButtonPanel();//Displays buttons at the bottom
+//            this.add(gamePanel, BorderLayout.CENTER);
+//            this.add(buttonPanel, BorderLayout.PAGE_END);
+//        }
+//    }
     
     /**
      * GamePanel - JPanel with card stacks to play solitaire.

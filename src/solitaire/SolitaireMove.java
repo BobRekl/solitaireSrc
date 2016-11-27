@@ -4,8 +4,8 @@
 package solitaire;
 
 /**
- * Encapsulates move data, card moved, stack from, stack to, and score for 
- * making the move.
+ * SolitaireMove - Encapsulates move data, card moved, stack from, stack to, 
+ * and score for making the move.
  * @author Bob Reklis
  */
 public class SolitaireMove {
