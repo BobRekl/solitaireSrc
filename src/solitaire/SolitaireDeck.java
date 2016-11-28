@@ -3,6 +3,9 @@
  */
 package solitaire;
 
+import java.awt.image.*;
+import java.awt.Graphics;
+
 /**
  * Solitaire Deck shuffles and sets up the deck of cards for the game.
  * @author Bob Reklis
@@ -160,8 +163,20 @@ public class SolitaireDeck {
         BufferedImage img;
         BufferedImage backImg = null;
         BufferedImage icon = null;
+        BufferedImage img2;
         String[] card_suites = {"s", "h", "c", "d"};
         String card_name; 
+        //float[] arr = {0f, -.125f, 0f, -.125f, 1.5f, -.125f, 0f, -.125f, 0f};
+        float[] arr = {0f, .125f, 0f, .125f, 0.5f, .125f, 0f, .125f, 0f};
+//        float[] arr = {
+//            -.125f, -.25f, -.125f, 
+//            -.25f, 2.5f, -.25f, 
+//            -.125f, -.25f, -.125f};
+        Kernel kernel;
+        ConvolveOp op;
+        
+        kernel = new Kernel(3,3,arr);
+        op = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         
         try { //special images
             backImg = ImageIO.read(new File("CardImages\\back.jpg"));
@@ -184,7 +199,25 @@ public class SolitaireDeck {
             } catch (IOException e) {
                 System.out.println("Solitaire Deck Image read Failed card_num = "+n+", card name"+card_name);
             }
-            CARD_IMAGES[n-1] = img;
+            img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
+            Graphics g = img2.getGraphics();
+            g.drawImage(img, 0, 0, null);
+            g.dispose();
+
+            CARD_IMAGES[n-1] = op.filter(img2, null);
+            //CARD_IMAGES[n-1] = img;
+            
+//            if(rank > 0){
+//                img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
+//                Graphics g = img2.getGraphics();
+//                g.drawImage(img, 0, 0, null);
+//                g.dispose();
+//            
+//                CARD_IMAGES[n-1] = op.filter(img2, null);
+//                //CARD_IMAGES[n-1] = img;
+//            } else {
+//                CARD_IMAGES[n-1] = img;
+//            }
         }
     }
     
