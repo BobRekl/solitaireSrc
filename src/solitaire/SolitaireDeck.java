@@ -174,6 +174,7 @@ public class SolitaireDeck {
 //            -.125f, -.25f, -.125f};
         Kernel kernel;
         ConvolveOp op;
+        Graphics g;
         
         kernel = new Kernel(3,3,arr);
         op = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
@@ -199,15 +200,15 @@ public class SolitaireDeck {
             } catch (IOException e) {
                 System.out.println("Solitaire Deck Image read Failed card_num = "+n+", card name"+card_name);
             }
-            img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
-            Graphics g = img2.getGraphics();
-            g.drawImage(img, 0, 0, null);
-            g.dispose();
+//            img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
+//            g = img2.createGraphics();
+//            g.drawImage(img, 0, 0, null);
+//            g.dispose();
 
-            CARD_IMAGES[n-1] = op.filter(img2, null);
+            CARD_IMAGES[n-1] = op.filter(img, null);
             //CARD_IMAGES[n-1] = img;
             
-//            if(rank > 0){
+//            if(rank > 10){
 //                img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
 //                Graphics g = img2.getGraphics();
 //                g.drawImage(img, 0, 0, null);
