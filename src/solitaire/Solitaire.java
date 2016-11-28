@@ -57,11 +57,11 @@ public class Solitaire extends JFrame {
         WindowData windowData = new WindowData(); //gets display parameters
         //solitairePanel = new SolitairePanel(); //container for game panel and button panel
         
+        player = new SolitairePlayer(); //moves the cards, sets up the stacks, sets up the deck
+            
         fileExists = readGameFile(); //read stored game data if it exists
         if(fileExists) fillSolitaireMoves(); //generate move stack from stored data
         
-        player = new SolitairePlayer(); //moves the cards, sets up the stacks, sets up the deck
-            
         autoPlayTimerListener = new AutoPlayTimerListener(); //listener for timer used to animate auto play
         autoPlayTimer = new javax.swing.Timer(windowData.AUTO_PLAY_TIMER_TIC, autoPlayTimerListener);
         autoPlayTimer.stop(); //turn off timer until auto play button pushed
