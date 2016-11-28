@@ -37,7 +37,7 @@ public class WindowData {
             
     WindowData(){
         X_WINDOW_SIZE = 950;
-        Y_WINDOW_SIZE = 670;
+        Y_WINDOW_SIZE = 682;
         X_WINDOW_LOC = 200; 
         Y_WINDOW_LOC = 30; 
         X_CARD = 85; //Size of most card images / 4 
@@ -45,7 +45,7 @@ public class WindowData {
         AUTO_PLAY_TIMER_TIC = 300;
         BORDER = BorderFactory.createLineBorder(Color.BLUE, 2); //standard border style
         
-        OFFSET_INC = 20;
+        OFFSET_INC = 21;
         GAP = 5;
         CONTAINER_GAP = 10;
 
