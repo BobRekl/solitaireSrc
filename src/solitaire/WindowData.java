@@ -16,8 +16,6 @@ public class WindowData {
     public final int Y_WINDOW_SIZE;
     public final int X_WINDOW_LOC; //Initial location of the main JFrame
     public final int Y_WINDOW_LOC; 
-    public final int X_BOARD_SIZE; //Size of the GamePanel within the JFrame/SolitairePanel
-    public final int Y_BOARD_SIZE;
     public final int X_CARD; //Nominal number of pixels in a card image
     public final int Y_CARD;
     public final int AUTO_PLAY_TIMER_TIC;
@@ -38,10 +36,8 @@ public class WindowData {
     public final int VICTORY_HEIGHT;  //victory display size
             
     WindowData(){
-        X_BOARD_SIZE = 930;
-        Y_BOARD_SIZE = 620;
-        X_WINDOW_SIZE = X_BOARD_SIZE + 20;
-        Y_WINDOW_SIZE = Y_BOARD_SIZE + 50;
+        X_WINDOW_SIZE = 950;
+        Y_WINDOW_SIZE = 670;
         X_WINDOW_LOC = 200; 
         Y_WINDOW_LOC = 30; 
         X_CARD = 85; //Size of most card images / 4 

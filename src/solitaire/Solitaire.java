@@ -6,22 +6,9 @@ package solitaire;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.awt.Color;
-import java.awt.BorderLayout;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
-import java.io.PrintWriter;
-import java.io.ObjectOutputStream;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 /**
@@ -35,12 +22,11 @@ public class Solitaire extends JFrame {
     int NumberOfGamesPlayed;
     String LastPlayedDate;
     
-    //SolitairePanel solitairePanel; //Main solitaire game JPanel
     public SolitairePlayer player; //Moves the cards for the game
     boolean protect_flag; //Turns off mouse click responses
-    boolean showStatistics; //Flag causes statistics display to be painted
-    boolean writeStatistics_flag; //Off when save and quit button pushed to preserve game count
-    boolean fileExists; //saved game file exists
+    boolean showStatistics_flag; //Flag causes statistics display to be painted
+    boolean writeStatistics_flag; //Set false when save and quit button is pushed this preserves game count
+    
     
     ArrayList<int[]> solitaireMovesLocal; //A local version of the solitaire moves stack as and ArrayList of int[]
     AutoPlayTimerListener autoPlayTimerListener; //Timer used to animate auto play function
@@ -54,6 +40,8 @@ public class Solitaire extends JFrame {
      * Solitaire Constructor - Creates main JPanel. 
      */
     Solitaire(){
+        boolean fileExists; //saved game file exists
+        
         WindowData windowData = new WindowData(); //gets display parameters
         //solitairePanel = new SolitairePanel(); //container for game panel and button panel
         
@@ -76,7 +64,6 @@ public class Solitaire extends JFrame {
         this.setIconImage(player.Stacks.Deck.getImage(54));
         this.setVisible(true);
         
-        //this.add(solitairePanel);
         writeStatistics_flag = true; //update statistics file at end of game
 
         this.setLayout(new BorderLayout());
@@ -88,35 +75,6 @@ public class Solitaire extends JFrame {
         this.add(gamePanel, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.PAGE_END);
     }
-    
-//    /**
-//     * SolitairePanel - The main JPanel contains the Game Panel and Button Panel.
-//     */
-//    class SolitairePanel extends JPanel{
-//        public GamePanel gamePanel;
-//        public ButtonPanel buttonPanel;
-//        
-//        /**
-//         * SolitairePanel - Creates player mechanism to move cards then adds 
-//         * game and button panels to JFrame for display and control.
-//         */
-//        SolitairePanel() {
-//            WindowData windowData = new WindowData(); //package of display parameters
-//            
-//            player = new SolitairePlayer(); //moves the cards
-//            
-//            writeStatistics_flag = true; //update statistics file at end of game
-//            
-//            this.setLayout(new BorderLayout());
-//            this.setBorder(windowData.BORDER);
-//            this.setBackground(Color.GREEN);
-//            
-//            gamePanel = new GamePanel();//Displays the game
-//            buttonPanel = new ButtonPanel();//Displays buttons at the bottom
-//            this.add(gamePanel, BorderLayout.CENTER);
-//            this.add(buttonPanel, BorderLayout.PAGE_END);
-//        }
-//    }
     
     /**
      * GamePanel - JPanel with card stacks to play solitaire.
@@ -149,13 +107,13 @@ public class Solitaire extends JFrame {
             this.addKeyListener(ctrlZListener);
             this.setBorder(windowData.BORDER);
             this.setBackground(Color.GREEN);
-            this.setPreferredSize(new java.awt.Dimension(windowData.X_BOARD_SIZE, windowData.Y_BOARD_SIZE));
+            //this.setPreferredSize(new java.awt.Dimension(windowData.X_BOARD_SIZE, windowData.Y_BOARD_SIZE));
             
             HighScore = 0;
             NumberOfVictories = 0;
             NumberOfGamesPlayed = 0;
             LastPlayedDate = "";
-            showStatistics = false;
+            showStatistics_flag = false;
             
             readStatistics(); //read data from statistics file
             //System.out.println("GamePanel Number of Victories = "+NumberOfVictories);
@@ -228,7 +186,7 @@ public class Solitaire extends JFrame {
                 //System.out.println("ctrlzlistener1");
                 if((e.getKeyCode()==java.awt.event.KeyEvent.VK_Z)&&ctrlDn){
                     //System.out.println("ctrlzlistener2");
-                    showStatistics = false;
+                    showStatistics_flag = false;
                     player.unDo();
                     repaint();
                 }
@@ -293,7 +251,7 @@ public class Solitaire extends JFrame {
 
             //requestFocusInWindow();
             
-            showStatistics = false;
+            showStatistics_flag = false;
             repaint();
             
             caseSelector = 0;
@@ -563,7 +521,7 @@ public class Solitaire extends JFrame {
             //victory.paint(gg);
             
             statisticsOffset = 5;
-            if(showStatistics){//Create and draw statistics rectangle
+            if(showStatistics_flag){//Create and draw statistics rectangle
                 rectangle = new Rectangle(windowData.X_STATISTICS_POS, windowData.Y_STATISTICS_POS, windowData.STATISTICS_WIDTH, windowData.STATISTICS_HEIGHT);
                 g2.setColor(Color.WHITE);
                 g2.fill(rectangle);
@@ -739,7 +697,7 @@ public class Solitaire extends JFrame {
             widthButtons = widthNewGame + widthRestart + widthSave + widthUnDo + 
                     widthRecycle + widthAutoPlay + widthStats;
             widthGap = 6;
-            widthButtonPanel = windowData.X_BOARD_SIZE - getInsets().left - getInsets().right;
+            widthButtonPanel = windowData.X_WINDOW_SIZE - getInsets().left - getInsets().right;
             //System.out.println("containerGap = "+(widthButtonPanel - widthButtons)/2+", inset = "+getInsets().left+", gap = "+widthGap);
             layout.setHorizontalGroup(layout.createSequentialGroup()
                     .addContainerGap((widthButtonPanel - widthButtons - 6*widthGap)/2, 
@@ -777,7 +735,7 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             //System.out.println("newGameButton");
-            showStatistics = false;
+            showStatistics_flag = false;
             writeStatistics();
             readStatistics();
             player.newGame();
@@ -792,7 +750,7 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             //System.out.println("restartButton");
-            showStatistics = false;
+            showStatistics_flag = false;
             player.restartGame();
             repaint();
         }
@@ -822,7 +780,7 @@ public class Solitaire extends JFrame {
     private class UnDoButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            showStatistics = false;
+            showStatistics_flag = false;
             player.unDo();
             repaint();
         }
@@ -835,7 +793,7 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             //System.out.println("RecycleDeckListener 8 is empty-"+Moves.Stacks.isEmpty(8)+", toDisplay-"+Moves.toDisplay);
-            showStatistics = false;
+            showStatistics_flag = false;
             if((player.Stacks.isEmpty(8))&&(player.toDisplay)){ //If new card pile is empty and it is the first half of a move then recycle the deck
                 player.recycleDeck();
                 repaint();
@@ -850,7 +808,7 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             //System.out.println("AutoPlayButtonListener toDisplay = " + Moves.toDisplay);
-            showStatistics = false;
+            showStatistics_flag = false;
             if(player.toDisplay){ //if first half of the move cycle
                 player.setAnnouncement("Working");
                 //repaint();
@@ -890,7 +848,7 @@ public class Solitaire extends JFrame {
     private class DisplayStatsButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            showStatistics = !showStatistics;
+            showStatistics_flag = !showStatistics_flag;
             repaint();
         }
     }
