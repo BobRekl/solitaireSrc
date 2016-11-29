@@ -49,7 +49,7 @@ public class SolitaireDeck {
         }
         if(Acard != 1) System.out.println("Solitaire Deck Fault 1");
     }
-    
+
     /**
      * NCard provides a comparable class used to permute card data and shuffle 
      * the solitaire deck.
@@ -182,13 +182,38 @@ public class SolitaireDeck {
         Kernel kernel;
         ConvolveOp op;
         //Graphics g;
+        //OsName osName;
+        String OS;
+        int osCase;
         
         kernel = new Kernel(3,3,arr);
         op = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        //osName = new OsName();
+        OS = System.getProperty("os.name"); //find the operating system name
+        //System.out.println("OS = "+OS);
+        osCase = 0;
+        if(OS.startsWith("Windows")){
+            osCase = 1;
+        }
+        if(OS.startsWith("mac")){
+            osCase = 2;
+        }
         
         try { //special images
-            backImg = ImageIO.read(new File("CardImages\\back.jpg"));
-            icon = ImageIO.read(new File("CardImages\\icon.jpg"));
+            switch(osCase){
+                case 1: //for Windows
+                    backImg = ImageIO.read(new File("CardImages\\back.jpg"));
+                    icon = ImageIO.read(new File("CardImages\\icon.jpg"));
+                    break;
+                case 2://for mac
+                    backImg = ImageIO.read(new File("CardImages//back.jpg"));
+                    icon = ImageIO.read(new File("CardImages//icon.jpg"));
+                    break;
+                default:
+                    System.out.println("SolitaireDeck can't find operating system 1");
+                    break;
+                    
+            }
             //System.out.println("Success");
         } catch (IOException e) {
                 System.out.println("Solitaire Deck Image read Failed card_num = "+"back");
@@ -203,7 +228,17 @@ public class SolitaireDeck {
             img = null;
 
             try {
-                img = ImageIO.read(new File("CardImages\\" + card_name));
+                switch(osCase){
+                    case 1: //for Windows
+                        img = ImageIO.read(new File("CardImages\\" + card_name));
+                        break;
+                    case 2: //for mac
+                        img = ImageIO.read(new File("CardImages//" + card_name));
+                        break;
+                    default:
+                        System.out.println("SolitaireDeck can't find operating system 2");
+                        break;
+                }
             } catch (IOException e) {
                 System.out.println("Solitaire Deck Image read Failed card_num = "+n+", card name"+card_name);
             }
@@ -214,18 +249,6 @@ public class SolitaireDeck {
 
             CARD_IMAGES[n-1] = op.filter(img, null);
             //CARD_IMAGES[n-1] = img;
-            
-//            if(rank > 10){
-//                img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
-//                Graphics g = img2.getGraphics();
-//                g.drawImage(img, 0, 0, null);
-//                g.dispose();
-//            
-//                CARD_IMAGES[n-1] = op.filter(img2, null);
-//                //CARD_IMAGES[n-1] = img;
-//            } else {
-//                CARD_IMAGES[n-1] = img;
-//            }
         }
     }
     
