@@ -167,14 +167,21 @@ public class SolitaireDeck {
         String[] card_suites = {"s", "h", "c", "d"};
         String card_name; 
         //float[] arr = {0f, -.125f, 0f, -.125f, 1.5f, -.125f, 0f, -.125f, 0f};
-        float[] arr = {0f, .125f, 0f, .125f, 0.5f, .125f, 0f, .125f, 0f};
+        float[] arr = {
+            .0625f, .0625f, .0625f, 
+            .0625f, 0.5f, .0625f, 
+            .0625f, .0625f, .0625f};
+//        float[] arr = {
+//            0f, .125f, 0f, 
+//            .125f, 0.5f, .125f, 
+//            0f, .125f, 0f};
 //        float[] arr = {
 //            -.125f, -.25f, -.125f, 
 //            -.25f, 2.5f, -.25f, 
 //            -.125f, -.25f, -.125f};
         Kernel kernel;
         ConvolveOp op;
-        Graphics g;
+        //Graphics g;
         
         kernel = new Kernel(3,3,arr);
         op = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
