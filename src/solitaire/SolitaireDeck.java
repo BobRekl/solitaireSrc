@@ -205,12 +205,12 @@ public class SolitaireDeck {
                     backImg = ImageIO.read(new File("CardImages\\back.jpg"));
                     icon = ImageIO.read(new File("CardImages\\icon.jpg"));
                     break;
+                default:
+                    System.out.println("SolitaireDeck can't find operating system 1");
+                    //break;
                 case 2://for mac
                     backImg = ImageIO.read(new File("CardImages//back.jpg"));
                     icon = ImageIO.read(new File("CardImages//icon.jpg"));
-                    break;
-                default:
-                    System.out.println("SolitaireDeck can't find operating system 1");
                     break;
                     
             }
@@ -232,11 +232,11 @@ public class SolitaireDeck {
                     case 1: //for Windows
                         img = ImageIO.read(new File("CardImages\\" + card_name));
                         break;
-                    case 2: //for mac
-                        img = ImageIO.read(new File("CardImages//" + card_name));
-                        break;
                     default:
                         System.out.println("SolitaireDeck can't find operating system 2");
+                        //break;
+                    case 2: //for mac
+                        img = ImageIO.read(new File("CardImages//" + card_name));
                         break;
                 }
             } catch (IOException e) {
