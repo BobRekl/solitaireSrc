@@ -70,7 +70,7 @@ public class SolitairePlayer {
             } else {
                 popMovesStack(); //remove first half of the move
                 setAnnouncement("Invalid Move");
-                if(last_stack == stack_t){ //If move is back to the original stack don't announce it as "Invalid Move"
+                if((last_stack == stack_t) || (stack_t == 0)){ //If move is back to the original stack don't announce it as "Invalid Move"
                     setAnnouncement("");
                 }
             }
@@ -125,9 +125,11 @@ public class SolitairePlayer {
         int card_to;
         boolean valid_move;
         
-        //valid_move = false;
         card_to = Stacks.getStackTop(stack_to);
         switch (stack_to){ 
+            case 0:
+                valid_move = false;
+                break;
             case 1: case 2: case 3: case 4: case 5: case 6: case 7:
                 valid_move = false;
                 if((Stacks.isEmpty(stack_to))&&(Stacks.Deck.getRank(card_from) == 13)){ //OK to move king to empty lower stack
@@ -167,6 +169,8 @@ public class SolitairePlayer {
             default:
                 valid_move = true; //OK to move to display stack.  Mouse clicks to display stack are rejected.
         }
+        //System.out.println("validMove stack_to = "+stack_to+", Move is valid "+valid_move);
+
         //valid_move = true;
         return valid_move;
     }
@@ -361,6 +365,24 @@ public class SolitairePlayer {
                 setAnnouncement("Must complete move before Un Do");
             }
         }
+    }
+    
+    /**
+     * Moves the card from the top of stack 8 to stack 9
+     */
+    void moveStack8to9(){
+        int cardNum;
+        SolitaireMove solitaireMove;
+        
+        cardNum = Stacks.getStackTop(8);
+        solitaireMove = new SolitaireMove(8, 10, cardNum, 0); //set up move and add to the move stack
+        solitaireMoves.add(solitaireMove);
+        solitaireMove = new SolitaireMove(10, 9, cardNum, 0);
+        solitaireMoves.add(solitaireMove);
+
+        executeMoves();
+        setAnnouncement("");
+            
     }
     
     /**

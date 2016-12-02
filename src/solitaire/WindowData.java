@@ -19,6 +19,7 @@ public class WindowData {
     public final int X_CARD; //Nominal number of pixels in a card image
     public final int Y_CARD;
     public final int AUTO_PLAY_TIMER_TIC;
+    public final int DRAG_DROP_TIMER_TIC;
     public final Border BORDER;
     
     public final int OFFSET_INC; //amount visible cards are offset in a stack
@@ -43,6 +44,7 @@ public class WindowData {
         X_CARD = 85; //Size of most card images / 4 
         Y_CARD = 132;
         AUTO_PLAY_TIMER_TIC = 300;
+        DRAG_DROP_TIMER_TIC = 20;
         BORDER = BorderFactory.createLineBorder(Color.BLUE, 2); //standard border style
         
         OFFSET_INC = 21;

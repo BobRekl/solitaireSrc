@@ -91,8 +91,11 @@ public class Solitaire extends JFrame {
         JLabel dateL;
         double proportionOfVictories;
         double standardDeviation;
+        
         BufferedImage backImg; //image of back of a card
         ArrayList<CardRectangle> cardRectangle_s; //Stack of card rectangles enables mouse click response
+        DragDropTimerListener dragDropTimerListener;
+        javax.swing.Timer dragDropTimer;
         
         /**
          * GamePanel - Constructor sets up main game panel displays with card stacks painted in paintComponent override.
@@ -108,6 +111,10 @@ public class Solitaire extends JFrame {
             this.setBorder(windowData.BORDER);
             this.setBackground(Color.GREEN);
             //this.setPreferredSize(new java.awt.Dimension(windowData.X_BOARD_SIZE, windowData.Y_BOARD_SIZE));
+            
+            dragDropTimerListener = new DragDropTimerListener(); //listener for timer used to animate drag and drop
+            dragDropTimer = new javax.swing.Timer(windowData.DRAG_DROP_TIMER_TIC, dragDropTimerListener);
+            dragDropTimer.stop(); //turn off timer until mouse pushed
             
             HighScore = 0;
             NumberOfVictories = 0;
@@ -176,6 +183,23 @@ public class Solitaire extends JFrame {
         }
         
         /**
+         * DragDropTimerListener - Causes action during drag and drop.
+         */
+        private class DragDropTimerListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Point panelLocation;
+                
+                panelLocation = getLocationOnScreen();
+                //System.out.println("DragDropTimerListener mouseInfo x = "+(int) MouseInfo.getPointerInfo().getLocation().getX()+", y = "+(int) MouseInfo.getPointerInfo().getLocation().getY());
+                point.setLocation(MouseInfo.getPointerInfo().getLocation().getX() - panelLocation.getX(), 
+                        MouseInfo.getPointerInfo().getLocation().getY() - panelLocation.getY());
+                repaint();
+                
+            }
+        }
+
+        /**
          * CtrlZListener - Fires when ctrl z is pressed.
          */
         class CtrlZListener implements KeyListener{
@@ -214,18 +238,23 @@ public class Solitaire extends JFrame {
             @Override
             public void mousePressed(MouseEvent mouseEvent){
                 mousePressed = true;
+                dragDropTimer.start();
                 respondToMouse(mouseEvent, mousePressed);
             }
             @Override
             public void mouseReleased(MouseEvent mouseEvent){
                 mousePressed = false;
+                dragDropTimer.stop();
                 respondToMouse(mouseEvent, mousePressed);
             }
         }
         
         int lastStack = 0;
         boolean attempt = true;
-        
+        boolean mouseDown = false;
+        Point point;
+        int cardFound = 0;
+        int stackFound = 0;
         
         /**
          * Responds to mouse click.
@@ -240,7 +269,6 @@ public class Solitaire extends JFrame {
             boolean e1;
             boolean e2;
             boolean placeFound;
-            Point point;
             int mouseButton = 0;
             //boolean recycleDeck;
             int caseSelector;
@@ -248,9 +276,9 @@ public class Solitaire extends JFrame {
             
             e1 = player.toDisplay && mousePressed_in; //first half of move - respond to mouse pressed
             e2 = !player.toDisplay && !mousePressed_in; //second half of move - respond to mouse released
+            cardFound = 0;
+            stackFound = 0;
 
-            //requestFocusInWindow();
-            
             showStatistics_flag = false;
             repaint();
             
@@ -259,14 +287,17 @@ public class Solitaire extends JFrame {
             //respond = mousePressed_in;
             respond = e1 || e2;
             if(respond){ //respond to mouse pressed on first half of a move and mouse reseased on the second
+                repaint();
                 //protect_flag = false;
                 if(!protect_flag){ //If protect flag set then don't respond to click
                     protect_flag = true;
                     
                     //System.out.println("numClicks = "+numClicks);
+                    mouseDown = false; //The mouse is released.  will later be set true if down
                     if(e1){ //first half of the move
                         attempt = true; //clear flags
                         lastStack = 0;
+                        //mouseDown = true; //The mouse is pressed
                         numClicks = mouseEvent.getClickCount();
                         mouseButton = mouseEvent.getButton();
                     }
@@ -288,31 +319,37 @@ public class Solitaire extends JFrame {
                     }
                      
                     if(pointFound){
+                        cardFound = cardRectangle.cardNum;
+                        stackFound = cardRectangle.stackNum;
+                    } else {
+                        cardFound = 0;
+                        stackFound = 0;
+                    }
 //                        System.out.println("mouseButton = "+mouseButton+", stackNum = "+
-//                                cardRectangle.stackNum+", cardNum = "+cardRectangle.cardNum);
-                        if(e1 && (numClicks == 2) &&
-                                (cardRectangle.stackNum == 8) && 
-                                player.Stacks.isEmpty(cardRectangle.stackNum)){
-                            caseSelector = 2;//recycle deck on double click in stack 8 when it is empty
-                            //System.out.println("caseSelector = 1");
-                        }
-                        
+//                                stackFound+", cardNum = "+cardFound);
+//                        if(e1 && (numClicks == 2) &&
+//                                (stackFound == 8) && 
+//                                player.Stacks.isEmpty(stackFound)){
+//                            caseSelector = 2;//recycle deck on double click in stack 8 when it is empty
+//                            //System.out.println("caseSelector = 1");
+//                        }
+//                        
                         if(e1 && (mouseButton > 1) &&
-                                (cardRectangle.stackNum == 8) && 
-                                player.Stacks.isEmpty(cardRectangle.stackNum)){
+                                (stackFound == 8) && 
+                                player.Stacks.isEmpty(stackFound)){
                             caseSelector = 2;//recycle deck on right click in stack 8 when it is empty
                             //System.out.println("caseSelector = 1");
                         }
                         
                         if(e1 && (mouseButton > 1) && 
-                                ((cardRectangle.stackNum <= 8) || (cardRectangle.stackNum == 9)) && 
-                                !player.Stacks.isEmpty(cardRectangle.stackNum) &&
-                                (cardRectangle.cardNum == player.Stacks.getStackTop(cardRectangle.stackNum))){
+                                (stackFound <= 9) && 
+                                !player.Stacks.isEmpty(stackFound) &&
+                                (cardRectangle.cardNum == player.Stacks.getStackTop(stackFound))){
                             caseSelector = 3;//automatically move card to upper stack when right clicked
                             //System.out.println("caseSelector = 2");
                         }
 
-                        if(cardRectangle.stackNum == 10){
+                        if(stackFound == 10){
                             caseSelector = 1; //can't put it on the display stack
                         }
                         
@@ -326,25 +363,31 @@ public class Solitaire extends JFrame {
                                 break;
                             case 3: //automatically move card to upper stack when right clicked
                                 //System.out.println("Case 3");
-                                placeFound = player.autoMove(cardRectangle.stackNum, cardRectangle.cardNum);
+                                placeFound = player.autoMove(stackFound, cardFound);
                                 if(placeFound) {
                                     repaint();
                                     break;
                                 }
                             default://normal operation
-                                attempt = !attempt;
-                                //attempt++; //number of attempts to
-                                //if((cardRectangle.stackNum != lastStack)||(attempt > 1)){
-                                if((cardRectangle.stackNum != lastStack)|| attempt){
-                                    //respond if it is new stack or if it is not the mouse release on the first mouse press 
-                                    attempt = true;
-                                    player.makeMove(cardRectangle.stackNum, cardRectangle.cardNum);
+                                if(e1 && (stackFound == 8)){
+                                    player.moveStack8to9();
                                     repaint();
+                                } else {
+                                    if(e1){
+                                        mouseDown = true; //The mouse is pressed
+                                    }
+                                    attempt = !attempt;
+                                    if((stackFound != lastStack)|| attempt){
+                                        //respond if it is new stack or if it is not the mouse release on the first mouse press 
+                                        attempt = true;
+                                        player.makeMove(stackFound, cardFound);
+                                        repaint();
+                                    }
+                                    lastStack = stackFound;
                                 }
-                                lastStack = cardRectangle.stackNum;
                                 break;
                         }
-                    }
+                    
                     protect_flag = false;
                 }
             }
@@ -395,6 +438,12 @@ public class Solitaire extends JFrame {
             int countNotVis;
             
             requestFocusInWindow();
+            
+//            if(point != null){
+//                System.out.println("paintComponent point x = "+(int) point.getX()+
+//                        ", y = "+(int) point.getY()+", mouseDown = "+mouseDown+
+//                        ", cardFound = "+cardFound);
+//            }
             
             //update announcement
             announcement.setText(player.announcement);
@@ -572,6 +621,9 @@ public class Solitaire extends JFrame {
                 dateL.setBounds(1 + insets.left, 1 + insets.top,size.width, size.height);
                 gg = g.create(windowData.X_STATISTICS_POS + insets.left + windowData.STATISTICS_H_OFFSET, windowData.X_STATISTICS_POS + insets.top + statisticsOffset, size.width, size.height);
                 dateL.paint(gg);
+            }
+            if(mouseDown && (cardFound > 0) && (stackFound != 8) &&(point != null)){ //draw card at cursor location
+                paintCard(g2, cardFound, (int)point.getX(), (int)point.getY(), false);
             }
         }
         
