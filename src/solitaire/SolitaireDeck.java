@@ -24,7 +24,6 @@ import javax.imageio.ImageIO;
  */
 public class SolitaireDeck {
     public static final BufferedImage[] CARD_IMAGES = new BufferedImage[54];
-    public static final BufferedImage[] GHOST_IMAGES = new BufferedImage[52];
     public int[] NextCards = new int[52]; //For card n-1 the array holds the next card in the deck.  NextCards run 1 to 52
     public int[] NextCardsArchive = new int[52];
     public boolean[] CardsVis = new boolean[52]; //For card n-1 the array holds the visibility.  NextCards run 1 to 52
@@ -164,7 +163,6 @@ public class SolitaireDeck {
         BufferedImage img;
         BufferedImage backImg = null;
         BufferedImage icon = null;
-        BufferedImage img2;
         String[] card_suites = {"s", "h", "c", "d"};
         String card_name; 
         //float[] arr = {0f, -.125f, 0f, -.125f, 1.5f, -.125f, 0f, -.125f, 0f};
@@ -172,30 +170,17 @@ public class SolitaireDeck {
             .0625f, .0625f, .0625f, 
             .0625f, 0.5f, .0625f, 
             .0625f, .0625f, .0625f};
-//        float[] blurKernel = {
-//            0f, .125f, 0f, 
-//            .125f, 0.5f, .125f, 
-//            0f, .125f, 0f};
-//        float[] blurKernel = {
-//            -.125f, -.25f, -.125f, 
-//            -.25f, 2.5f, -.25f, 
-//            -.125f, -.25f, -.125f};
-        float[] scales = {1.0f, 1.0f, 1.0f, 0.5f};
-        //float[] offsets = new float[4];
-        float[] offsets = {0.0f, 0.0f, 0.0f, 0.0f};
         
         Kernel kernel;
         ConvolveOp convolveOp;
         RescaleOp rescaleOp;
         Graphics g;
-        //OsName osName;
         String OS;
         int osCase;
         
         kernel = new Kernel(3,3,blurKernel);
         convolveOp = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-        rescaleOp = new RescaleOp(scales, offsets, null);
-        //osName = new OsName();
+        
         OS = System.getProperty("os.name"); //find the operating system name
         //System.out.println("OS = "+OS);
         osCase = 0;
@@ -252,14 +237,6 @@ public class SolitaireDeck {
             CARD_IMAGES[n-1] = convolveOp.filter(img, null);
             //CARD_IMAGES[n-1] = img;
             
-            img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB); 
-            g = img2.createGraphics();
-            g.drawImage(img, 0, 0, null);
-            g.dispose();
-            //System.out.println(img2.);
-            //System.out.println(card_name);
-            //GHOST_IMAGES[n-1] = rescaleOp.filter(img2, null);
-            //CARD_IMAGES[n-1] = rescaleOp.filter(img2, null);
         }
     }
     

@@ -25,6 +25,9 @@ public class WindowData {
     public final int OFFSET_INC; //amount visible cards are offset in a stack
     public final int GAP; //gap between stacks in game panel
     public final int CONTAINER_GAP; //vertical displacement of stacks in game pannel
+    public final float GHOST_TRANSPARENCY; //ghost card transparency 
+    public final int GHOST_CURSOR_OFFSET; //offset of cursor from ghost card upper left corner 
+    public final Color GHOST_BORDER_COLOR; //Color of ghost card border
 
     public final int STATISTICS_H_OFFSET; //distanct to text in statistics display
     public final int X_STATISTICS_POS; //statistics display position
@@ -50,6 +53,9 @@ public class WindowData {
         OFFSET_INC = 21;
         GAP = 5;
         CONTAINER_GAP = 10;
+        GHOST_TRANSPARENCY = 0.9f;
+        GHOST_CURSOR_OFFSET = 3;
+        GHOST_BORDER_COLOR = new Color(65, 113, 156);
 
         STATISTICS_H_OFFSET = 10;
         X_STATISTICS_POS = 20;

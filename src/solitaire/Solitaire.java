@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -189,13 +190,14 @@ public class Solitaire extends JFrame {
             @Override
             public void actionPerformed(ActionEvent event) {
                 Point panelLocation;
+                WindowData windowData;
                 
+                windowData = new WindowData();
                 panelLocation = getLocationOnScreen();
                 //System.out.println("DragDropTimerListener mouseInfo x = "+(int) MouseInfo.getPointerInfo().getLocation().getX()+", y = "+(int) MouseInfo.getPointerInfo().getLocation().getY());
-                point.setLocation(MouseInfo.getPointerInfo().getLocation().getX() - panelLocation.getX(), 
-                        MouseInfo.getPointerInfo().getLocation().getY() - panelLocation.getY());
+                point.setLocation(MouseInfo.getPointerInfo().getLocation().getX() - panelLocation.getX() - windowData.GHOST_CURSOR_OFFSET, 
+                        MouseInfo.getPointerInfo().getLocation().getY() - panelLocation.getY() - windowData.GHOST_CURSOR_OFFSET);
                 repaint();
-                
             }
         }
 
@@ -327,13 +329,13 @@ public class Solitaire extends JFrame {
                     }
 //                        System.out.println("mouseButton = "+mouseButton+", stackNum = "+
 //                                stackFound+", cardNum = "+cardFound);
-//                        if(e1 && (numClicks == 2) &&
-//                                (stackFound == 8) && 
-//                                player.Stacks.isEmpty(stackFound)){
-//                            caseSelector = 2;//recycle deck on double click in stack 8 when it is empty
-//                            //System.out.println("caseSelector = 1");
-//                        }
-//                        
+                        if(e1 && (numClicks == 2) &&
+                                (stackFound == 8) && 
+                                player.Stacks.isEmpty(stackFound)){
+                            caseSelector = 2;//recycle deck on double click in stack 8 when it is empty
+                            //System.out.println("caseSelector = 1");
+                        }
+                        
                         if(e1 && (mouseButton > 1) &&
                                 (stackFound == 8) && 
                                 player.Stacks.isEmpty(stackFound)){
@@ -355,7 +357,10 @@ public class Solitaire extends JFrame {
                         
                         switch (caseSelector){
                             case 1://can't put a card on the display stack
-                                //do nothing
+                                cardFound = 0; //sets up error situation in makeMove
+                                stackFound = 0;
+                                player.makeMove(stackFound, cardFound);
+                                repaint();
                                 break;
                             case 2: //recycle deck on double click in stack 8 when it is empty
                                 player.recycleDeck();
@@ -623,7 +628,7 @@ public class Solitaire extends JFrame {
                 dateL.paint(gg);
             }
             if(mouseDown && (cardFound > 0) && (stackFound != 8) &&(point != null)){ //draw card at cursor location
-                paintCard(g2, cardFound, (int)point.getX(), (int)point.getY(), false);
+                paintGhostCard(g2, cardFound, (int)point.getX(), (int)point.getY());
             }
         }
         
@@ -648,7 +653,7 @@ public class Solitaire extends JFrame {
                 
         /**
          * Paints card.
-         * @param g2 - graphics context for painting the card
+         * @param g2 - 2D graphics context for painting the card
          * @param cardNum - cardNum for card to paint
          * @param cardPosX - x coordinate of card position
          * @param cardPosY - y coordinate of card position
@@ -685,6 +690,46 @@ public class Solitaire extends JFrame {
             g2.draw(rectangle);
             
             return rectangle;
+        }
+        
+        /**
+         * Paints ghost card.
+         * @param g2 - graphics context for painting the card
+         * @param cardNum - cardNum for card to paint
+         * @param cardPosX - x coordinate of card position
+         * @param cardPosY - y coordinate of card position
+         */
+        void paintGhostCard(Graphics2D g2, int cardNum, int cardPosX, int cardPosY){
+            Rectangle rectangle;
+            BufferedImage img;
+            BufferedImage img2;
+            int IMGwidth;
+            int IMGheight;
+            float[] scales = {1.0f, 1.0f, 1.0f, 0.5f};
+            float[] offsets = {0.0f, 0.0f, 0.0f, 0.0f};
+            
+            WindowData windowData = new WindowData(); //display parameters
+            
+            scales[3] = windowData.GHOST_TRANSPARENCY;
+            RescaleOp rop = new RescaleOp(scales, offsets, null);
+            
+            img = player.Stacks.Deck.getImage(cardNum);
+            IMGwidth = player.Stacks.Deck.getImage(cardNum).getWidth();
+            IMGheight = player.Stacks.Deck.getImage(cardNum).getHeight();
+            //System.out.println("paintCard image width = "+IMGwidth+", image height = "+IMGheight);
+            
+            img2 = new BufferedImage(IMGwidth, IMGheight, BufferedImage.TYPE_INT_ARGB);
+            Graphics gg = img2.createGraphics();
+            gg.drawImage(img, 0, 0, null);
+            gg.dispose();
+            
+            g2.drawImage(rop.filter(img2, null), 
+                    cardPosX, cardPosY, cardPosX+windowData.X_CARD, cardPosY+windowData.Y_CARD, 
+                    0,0,IMGwidth, IMGheight, null);
+            rectangle = new Rectangle(cardPosX, cardPosY, windowData.X_CARD, windowData.Y_CARD);
+            g2.setColor(windowData.GHOST_BORDER_COLOR);
+            g2.setStroke(new BasicStroke(2));
+            g2.draw(rectangle);
         }
     }
     
