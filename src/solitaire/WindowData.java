@@ -28,6 +28,7 @@ public class WindowData {
     public final float GHOST_TRANSPARENCY; //ghost card transparency 
     public final int GHOST_CURSOR_OFFSET; //offset of cursor from ghost card upper left corner 
     public final Color GHOST_BORDER_COLOR; //Color of ghost card border
+    public final Color EMPTY_STACK_COLOR; //Color of rectangle at bottom of stack
 
     public final int STATISTICS_H_OFFSET; //distanct to text in statistics display
     public final int X_STATISTICS_POS; //statistics display position
@@ -56,6 +57,7 @@ public class WindowData {
         GHOST_TRANSPARENCY = 0.9f;
         GHOST_CURSOR_OFFSET = 3;
         GHOST_BORDER_COLOR = new Color(65, 113, 156);
+        EMPTY_STACK_COLOR = new Color(0, 127, 63);
 
         STATISTICS_H_OFFSET = 10;
         X_STATISTICS_POS = 20;

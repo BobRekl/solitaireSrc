@@ -539,11 +539,17 @@ public class Solitaire extends JFrame {
                 cardPosX = stackRectPosX + (STACK_WIDTH - windowData.X_CARD)/2;
                 cardPosY = stackRectPosY + 5;
                 rectangle = new Rectangle(cardPosX, cardPosY, windowData.X_CARD, windowData.Y_CARD);
-                g2.setColor(new Color(0, 127, 63));
+                g2.setColor(windowData.EMPTY_STACK_COLOR);
                 g2.fill(rectangle);
                 g2.setColor(Color.BLUE);
                 g2.setStroke(new BasicStroke(2));
                 g2.draw(rectangle);
+                
+                if(stackNum == 8){ //Text at the bottom of the new card pile
+                    g2.setColor(Color.WHITE);
+                    g2.drawString("Right Click", cardPosX + 10, cardPosY + windowData.Y_CARD/2 - 5);
+                    g2.drawString("To Refresh", cardPosX + 10, cardPosY + windowData.Y_CARD/2 + 10);
+                }
                 
                 //Create and draw filled card rectangles
                 if(cardNum == 0){//add empty rectangle at bottom of every stack
@@ -719,7 +725,7 @@ public class Solitaire extends JFrame {
             //System.out.println("paintCard image width = "+IMGwidth+", image height = "+IMGheight);
             
             img2 = new BufferedImage(IMGwidth, IMGheight, BufferedImage.TYPE_INT_ARGB);
-            Graphics gg = img2.createGraphics();
+            Graphics gg = img2.createGraphics(); //An incantation to the gods of JAVA possibly making a copy of img in img2
             gg.drawImage(img, 0, 0, null);
             gg.dispose();
             
@@ -745,6 +751,7 @@ public class Solitaire extends JFrame {
             int widthRecycle;
             int widthAutoPlay;
             int widthStats;
+            int widthInstructions;
             int widthGap;
             int widthButtons;
             int widthButtonPanel;
@@ -776,10 +783,10 @@ public class Solitaire extends JFrame {
             unDoButton.addActionListener(unDoButtonListener);
             widthUnDo = unDoButton.getPreferredSize().width;
 
-            JButton recycleDeckButton = new JButton("Recycle Deck");
-            RecycleDeckButtonListener recycleDeckButtonListener = new RecycleDeckButtonListener();
-            recycleDeckButton.addActionListener(recycleDeckButtonListener);
-            widthRecycle = recycleDeckButton.getPreferredSize().width;
+//            JButton recycleDeckButton = new JButton("Recycle Deck");
+//            RecycleDeckButtonListener recycleDeckButtonListener = new RecycleDeckButtonListener();
+//            recycleDeckButton.addActionListener(recycleDeckButtonListener);
+//            widthRecycle = recycleDeckButton.getPreferredSize().width;
 
             JButton autoPlayButton = new JButton("Auto Play");
             AutoPlayButtonListener autoPlayButtonListener = new AutoPlayButtonListener();
@@ -791,8 +798,15 @@ public class Solitaire extends JFrame {
             displayStatsButton.addActionListener(displayStatsButtonListener);
             widthStats = displayStatsButton.getPreferredSize().width;
             
+            JButton instructionsButton = new JButton("Instructions.pdf");
+            InstructionsButtonListener instructionsButtonListener = new InstructionsButtonListener();
+            instructionsButton.addActionListener(instructionsButtonListener);
+            widthInstructions = instructionsButton.getPreferredSize().width;
+            
+//            widthButtons = widthNewGame + widthRestart + widthSave + widthUnDo + 
+//                    widthRecycle + widthAutoPlay + widthStats;
             widthButtons = widthNewGame + widthRestart + widthSave + widthUnDo + 
-                    widthRecycle + widthAutoPlay + widthStats;
+                    widthAutoPlay + widthStats + widthInstructions;
             widthGap = 6;
             widthButtonPanel = windowData.X_WINDOW_SIZE - getInsets().left - getInsets().right;
             //System.out.println("containerGap = "+(widthButtonPanel - widthButtons)/2+", inset = "+getInsets().left+", gap = "+widthGap);
@@ -806,21 +820,24 @@ public class Solitaire extends JFrame {
                     .addComponent(saveButton)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(unDoButton)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(recycleDeckButton)
+//                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+//                    .addComponent(recycleDeckButton)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(autoPlayButton)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(displayStatsButton)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(instructionsButton)
             );
             layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newGameButton)
                     .addComponent(restartButton)
                     .addComponent(saveButton)
                     .addComponent(unDoButton)
-                    .addComponent(recycleDeckButton)
+//                    .addComponent(recycleDeckButton)
                     .addComponent(autoPlayButton)
                     .addComponent(displayStatsButton)
+                    .addComponent(instructionsButton)
             );
         }
     }
@@ -946,6 +963,26 @@ public class Solitaire extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event) {
             showStatistics_flag = !showStatistics_flag;
+            repaint();
+        }
+    }
+    
+    /**
+     * DisplayStatsButtonListener - Causes action when display statistics button pressed.
+     */
+    private class InstructionsButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File myFile = new File("Instructions.pdf");
+                    Desktop.getDesktop().open(myFile);
+                } catch (IOException ex) {
+                    System.out.println("InstructionsButtonListener - No application registered for PDFs");
+                }
+            }
+            
+            showStatistics_flag = false;
             repaint();
         }
     }
