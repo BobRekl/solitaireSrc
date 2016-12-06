@@ -85,8 +85,11 @@ public class SolitaireStacks {
      */
     boolean isEmpty(int stackNum){
         boolean isempty;
-        isempty = false;
-        if(STACKbottoms[stackNum-1] <= 0) isempty = true;
+        isempty = true;
+        if((stackNum > 0) && (stackNum <= 14)){
+            isempty = false;
+            if(STACKbottoms[stackNum-1] <= 0) isempty = true;
+        }
         return isempty;
     }
     

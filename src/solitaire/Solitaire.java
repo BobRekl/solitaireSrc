@@ -344,6 +344,7 @@ public class Solitaire extends JFrame {
                         }
                         
                         if(e1 && (mouseButton > 1) && 
+                                (stackFound > 0) &&
                                 (stackFound <= 9) && 
                                 !player.Stacks.isEmpty(stackFound) &&
                                 (cardRectangle.cardNum == player.Stacks.getStackTop(stackFound))){
@@ -900,21 +901,21 @@ public class Solitaire extends JFrame {
         }
     }
 
-    /**
-     * RecycleDeckButtonListener - Causes action when recycle deck  button pressed.
-     */
-    private class RecycleDeckButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            //System.out.println("RecycleDeckListener 8 is empty-"+Moves.Stacks.isEmpty(8)+", toDisplay-"+Moves.toDisplay);
-            showStatistics_flag = false;
-            if((player.Stacks.isEmpty(8))&&(player.toDisplay)){ //If new card pile is empty and it is the first half of a move then recycle the deck
-                player.recycleDeck();
-                repaint();
-            }
-        }
-    }
-
+//    /**
+//     * RecycleDeckButtonListener - Causes action when recycle deck  button pressed.
+//     */
+//    private class RecycleDeckButtonListener implements ActionListener {
+//        @Override
+//        public void actionPerformed(ActionEvent event) {
+//            //System.out.println("RecycleDeckListener 8 is empty-"+Moves.Stacks.isEmpty(8)+", toDisplay-"+Moves.toDisplay);
+//            showStatistics_flag = false;
+//            if((player.Stacks.isEmpty(8))&&(player.toDisplay)){ //If new card pile is empty and it is the first half of a move then recycle the deck
+//                player.recycleDeck();
+//                repaint();
+//            }
+//        }
+//    }
+//
     /**
      * AutoPlayButtonListener - Causes action when auto play button pressed.
      */

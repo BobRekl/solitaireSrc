@@ -54,7 +54,7 @@ public class WindowData {
         OFFSET_INC = 21;
         GAP = 5;
         CONTAINER_GAP = 10;
-        GHOST_TRANSPARENCY = 0.9f;
+        GHOST_TRANSPARENCY = 0.8f;
         GHOST_CURSOR_OFFSET = 3;
         GHOST_BORDER_COLOR = new Color(65, 113, 156);
         EMPTY_STACK_COLOR = new Color(0, 127, 63);
