@@ -717,22 +717,13 @@ public class Solitaire extends JFrame {
             
             WindowData windowData = new WindowData(); //display parameters
             
-            scales[3] = windowData.GHOST_TRANSPARENCY;
-            RescaleOp rop = new RescaleOp(scales, offsets, null);
+            img = player.Stacks.Deck.getGhostImage(cardNum);
+            IMGwidth = img.getWidth();
+            IMGheight = img.getHeight();
             
-            img = player.Stacks.Deck.getImage(cardNum);
-            IMGwidth = player.Stacks.Deck.getImage(cardNum).getWidth();
-            IMGheight = player.Stacks.Deck.getImage(cardNum).getHeight();
-            //System.out.println("paintCard image width = "+IMGwidth+", image height = "+IMGheight);
-            
-            img2 = new BufferedImage(IMGwidth, IMGheight, BufferedImage.TYPE_INT_ARGB);
-            Graphics gg = img2.createGraphics(); //An incantation to the gods of JAVA possibly making a copy of img in img2
-            gg.drawImage(img, 0, 0, null);
-            gg.dispose();
-            
-            g2.drawImage(rop.filter(img2, null), 
-                    cardPosX, cardPosY, cardPosX+windowData.X_CARD, cardPosY+windowData.Y_CARD, 
-                    0,0,IMGwidth, IMGheight, null);
+            g2.drawImage(img, 
+                cardPosX, cardPosY, cardPosX+windowData.X_CARD, cardPosY+windowData.Y_CARD, 
+                0,0,IMGwidth, IMGheight, null);
             rectangle = new Rectangle(cardPosX, cardPosY, windowData.X_CARD, windowData.Y_CARD);
             g2.setColor(windowData.GHOST_BORDER_COLOR);
             g2.setStroke(new BasicStroke(2));

@@ -5,12 +5,6 @@ package solitaire;
 
 import java.awt.image.*;
 import java.awt.Graphics;
-
-/**
- * Solitaire Deck shuffles and sets up the deck of cards for the game.
- * @author Bob Reklis
- */
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +18,7 @@ import javax.imageio.ImageIO;
  */
 public class SolitaireDeck {
     public static final BufferedImage[] CARD_IMAGES = new BufferedImage[54];
+    public static final BufferedImage[] GHOST_IMAGES = new BufferedImage[52];
     public int[] NextCards = new int[52]; //For card n-1 the array holds the next card in the deck.  NextCards run 1 to 52
     public int[] NextCardsArchive = new int[52];
     public boolean[] CardsVis = new boolean[52]; //For card n-1 the array holds the visibility.  NextCards run 1 to 52
@@ -173,13 +168,18 @@ public class SolitaireDeck {
         
         Kernel kernel;
         ConvolveOp convolveOp;
-        RescaleOp rescaleOp;
+        GhostImage ghostImage;
+        
+        WindowData windowData;
+        
         Graphics g;
         String OS;
         int osCase;
         
         kernel = new Kernel(3,3,blurKernel);
         convolveOp = new java.awt.image.ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        windowData = new WindowData(); //display parameters
+                
         
         OS = System.getProperty("os.name"); //find the operating system name
         //System.out.println("OS = "+OS);
@@ -236,7 +236,8 @@ public class SolitaireDeck {
             }
             CARD_IMAGES[n-1] = convolveOp.filter(img, null);
             //CARD_IMAGES[n-1] = img;
-            
+            ghostImage = new GhostImage(img, windowData.GHOST_TRANSPARENCY); //creates transparent ghost image
+            GHOST_IMAGES[n-1] = ghostImage.getGhostImage();
         }
     }
     
@@ -250,6 +251,22 @@ public class SolitaireDeck {
         img = null;
         if((cardNum >= 1) && (cardNum <= 54)){
             img = CARD_IMAGES[cardNum - 1];
+        } else {
+            System.out.println("getImage- No such image "+cardNum);
+        }
+        return img;
+    }
+    
+    /**
+     * Gets a transparent ghost card image from an array of ghost card images.
+     * @param cardNum - Number of the card for which an image is returned.
+     * @return Return the selected image.
+     */
+    public BufferedImage getGhostImage(int cardNum){
+        BufferedImage img; 
+        img = null;
+        if((cardNum >= 1) && (cardNum <= 54)){
+            img = GHOST_IMAGES[cardNum - 1];
         } else {
             System.out.println("getImage- No such image "+cardNum);
         }
