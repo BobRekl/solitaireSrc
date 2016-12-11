@@ -1,4 +1,4 @@
-HighScore 410
-NumberOfVictories 1
-NumberOfGamesPlayed 128
-LastGamePlayed 12-07-2016
+HighScore 600
+NumberOfVictories 104
+NumberOfGamesPlayed 160
+LastGamePlayed 12-10-2016

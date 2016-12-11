@@ -63,7 +63,7 @@ public class WindowData {
         X_STATISTICS_POS = 20;
         Y_STATISTICS_POS = 20;
         STATISTICS_HEIGHT = 130;
-        STATISTICS_WIDTH = 200;
+        STATISTICS_WIDTH = 210;
         STATISTICS_INC = 20;
         
         VICTORY_WIDTH = 200;
